@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """Is where app instance of flask created"""
 from models import storage
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import os
 from api.v1.views import app_views
 
