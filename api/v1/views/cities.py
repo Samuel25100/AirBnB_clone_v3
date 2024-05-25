@@ -6,8 +6,9 @@ from models import storage
 from models.state import State
 from models.city import City
 
-@app_views.route('/states/<state_id>/cities', methods=['GET'])
-def state_cities():
+@app_views.route('/states/<state_id>/cities', methods=['GET'],
+                 strict_slashes=False)
+def state_cities(state_id):
     all_list = []
     state = storage.get(State, state_id)
     if state is None:
@@ -32,6 +33,7 @@ def del_city(city_id):
         abort(404)
     else:
         storage.delete(city)
+        storage.save()
         return {}, 200
 
 @app_views.route('/states/<state_id>/cities', methods=['POST'],
@@ -53,14 +55,14 @@ def post_city(state_id):
 
 
 @app_views.route('cities/<city_id>', methods=['PUT'], strict_slashes=False)
-def put_state(city_id):
+def put_city(city_id):
     city = storage.get(City, city_id)
     if city is None:
         abort(404)
     elif request.is_json:
         ignore = ['id', 'state_id', 'created_at', 'updated_at']
         val = request.get_json()
-        for key, value in city.items():
+        for key, value in val.items():
             if key not in ignore:
                 setattr(city, key, value)
         storage.save()
