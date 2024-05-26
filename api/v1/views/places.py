@@ -6,7 +6,7 @@ from models import storage
 from models.city import City
 from models.place import Place
 
-@app_views.route('/api/v1/cities/<city_id>/places', methods=['GET'],
+@app_views.route('/cities/<city_id>/places', methods=['GET'],
                  strict_slashes=False)
 def state_places(city_id):
     all_list = []
