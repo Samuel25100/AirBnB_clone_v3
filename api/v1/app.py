@@ -4,9 +4,11 @@ from models import storage
 from flask import Flask, jsonify, request
 import os
 from api.v1.views import app_views
+from flask_cors import CORS
 
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.register_blueprint(app_views)
 
