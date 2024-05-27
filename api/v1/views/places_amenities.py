@@ -5,7 +5,6 @@ from flask import jsonify, request, abort
 from models import storage
 from models.place import Place
 from models.amenity import Amenity
-from models.user import User
 import os
 
 
@@ -32,6 +31,8 @@ def del_places_amenities(place_id, amenity_id):
     place = storage.get(Place, place_id)
     amenity = storage.get(Amenity, amenity_id)
     if place is None or amenity is None:
+        abort(404)
+    if amenity_id not in place.amenity_ids:
         abort(404)
     if os.getenv('HBNB_TYPE_STORAG') == 'db':
         storage.delete(place.amenities)
