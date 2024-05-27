@@ -78,6 +78,8 @@ class DBStorage:
     def get(self, cls, id):
         """retrieve one object using class name and id"""
         tmp = cls
+        if cls not in classes.values():
+            return None
         if (cls and id):
             if type(cls) is str:
                 tmp = classes[cls]
@@ -90,6 +92,8 @@ class DBStorage:
         """count the number of objects in storage"""
         tmp = cls
         if cls:
+            if cls not in classes.values():
+                return None
             if type(cls) is str:
                 tmp = classes[cls]
             count = len(self.all(tmp))

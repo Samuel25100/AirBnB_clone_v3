@@ -5,13 +5,15 @@ from flask import jsonify, request, abort
 from models import storage
 from models.state import State
 
+
 @app_views.route('/states', methods=['GET'], strict_slashes=False)
 def all_states():
     all_list = []
     all_state = storage.all(State).values()
     for i in all_state:
         all_list.append(i.to_dict())
-    return all_list, 200
+    return jsonify(all_list)
+
 
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
 def a_state(state_id):
@@ -19,16 +21,19 @@ def a_state(state_id):
     if state is None:
         abort(404)
     else:
-        return state.to_dict(), 200
+        return jsonify(state.to_dict())
 
-@app_views.route('/states/<state_id>', methods=['DELETE'], strict_slashes=False)
+
+@app_views.route('/states/<state_id>', methods=['DELETE'],
+                 strict_slashes=False)
 def del_state(state_id):
     state = storage.get(State, state_id)
     if state is None:
         abort(404)
     else:
         storage.delete(state)
-        return {}, 200
+        return jsonify({}), 200
+
 
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
 def post_state():
@@ -42,6 +47,7 @@ def post_state():
     else:
         abort(404, description="Not a JSON")
 
+
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
 def put_state(state_id):
     state = storage.get(State, state_id)
@@ -54,6 +60,6 @@ def put_state(state_id):
             if key not in ignore:
                 setattr(state, key, value)
         storage.save()
-        return jsonify(state.to_dict()), 200
+        return jsonify(state.to_dict())
     else:
         abort(404, description="Not a JSON")

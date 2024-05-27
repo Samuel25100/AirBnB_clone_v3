@@ -17,18 +17,20 @@ def all_reviews(place_id):
         abort(404)
     for i in place.reviews:
         all_list.append(i.to_dict())
-    return jsonify(all_list), 200
+    return jsonify(all_list)
+
 
 @app_views.route('/reviews/<review_id>', methods=['GET'], strict_slashes=False)
 def a_review(review_id):
     review = storage.get(Review, review_id)
     if review is None:
-        abort(400, description="Bad Request: 'key' is missing in the request data")
+        abort(404)
     else:
-        return jsonify(review.to_dict()), 200
+        return jsonify(review.to_dict())
 
 
-@app_views.route('/reviews/<review_id>', methods=['DELETE'], strict_slashes=False)
+@app_views.route('/reviews/<review_id>', methods=['DELETE'],
+                 strict_slashes=False)
 def del_review(review_id):
     review = storage.get(Review, review_id)
     if review is None:
@@ -36,7 +38,8 @@ def del_review(review_id):
     else:
         storage.delete(review)
         storage.save()
-        return {}, 200
+        return jsonify({}), 200
+
 
 @app_views.route('/places/<place_id>/reviews', methods=['POST'],
                  strict_slashes=False)
@@ -52,12 +55,12 @@ def post_review(place_id):
             abort(404)
         if 'text' not in val:
             abort(400, description="Missing text")
+        val['place_id'] = place.id
         inst = Review(**val)
-        inst.place_id = place.id
         inst.save()
         return jsonify(inst.to_dict()), 201
     else:
-        abort(404, description="Not a JSON")
+        abort(400, description="Not a JSON")
 
 
 @app_views.route('reviews/<review_id>', methods=['PUT'], strict_slashes=False)
@@ -66,7 +69,7 @@ def put_review(review_id):
     if review is None:
         abort(404)
     elif request.is_json:
-        ignore = ['id', 'place_id', 'user_id','created_at', 'updated_at']
+        ignore = ['id', 'place_id', 'user_id', 'created_at', 'updated_at']
         val = request.get_json()
         for key, value in val.items():
             if key not in ignore:
@@ -74,4 +77,4 @@ def put_review(review_id):
         storage.save()
         return jsonify(review.to_dict()), 200
     else:
-        abort(404, description="Not a JSON")
+        abort(400, description="Not a JSON")
