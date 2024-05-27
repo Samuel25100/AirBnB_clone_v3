@@ -6,6 +6,7 @@ from models import storage
 from models.state import State
 from models.city import City
 
+
 @app_views.route('/states/<state_id>/cities', methods=['GET'],
                  strict_slashes=False)
 def state_cities(state_id):
@@ -16,6 +17,7 @@ def state_cities(state_id):
     for i in state.cities:
         all_list.append(i.to_dict())
     return jsonify(all_list), 200
+
 
 @app_views.route('/cities/<city_id>', methods=['GET'], strict_slashes=False)
 def a_city(city_id):
@@ -35,6 +37,7 @@ def del_city(city_id):
         storage.delete(city)
         storage.save()
         return {}, 200
+
 
 @app_views.route('/states/<state_id>/cities', methods=['POST'],
                  strict_slashes=False)
