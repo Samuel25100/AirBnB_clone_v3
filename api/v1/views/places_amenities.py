@@ -35,17 +35,12 @@ def del_places_amenities(place_id, amenity_id):
     if amenity_id not in place.amenity_ids:
         abort(404)
     if os.getenv('HBNB_TYPE_STORAG') == 'db':
-        storage.delete(place.amenities)
-        storage.save()
-        return jsonify({}), 200
+        place.amenities.remove(amenity)
     else:
         storage.delete(amenity)
-        for i in range(0, len(place.amenity_ids)):
-            if place.amenity_ids[i] == amenity_id:
-                place.amenity_ids.pop(i)
-                break
-        storage.save()
-        return jsonify({}), 200
+        place.amenity_ids.remove(amenity_id)
+    storage.save()
+    return jsonify({}), 200
 
 
 @app_views.route('/places/<place_id>/amenities/<amenity_id>', methods=['POST'],
