@@ -16,7 +16,7 @@ def state_places(city_id):
         abort(404)
     for i in city.places:
         all_list.append(i.to_dict())
-    return jsonify(all_list), 200
+    return jsonify(all_list)
 
 @app_views.route('/places/<place_id>', methods=['GET'], strict_slashes=False)
 def a_place(place_id):
@@ -35,7 +35,7 @@ def del_place(place_id):
     else:
         storage.delete(place)
         storage.save()
-        return {}, 200
+        return jsonify({}), 200
 
 @app_views.route('/cities/<city_id>/places', methods=['POST'],
                  strict_slashes=False)
@@ -57,7 +57,7 @@ def post_place(city_id):
         inst.save()
         return jsonify(inst.to_dict()), 201
     else:
-        abort(404, description="Not a JSON")
+        abort(400, description="Not a JSON")
 
 
 @app_views.route('/places/<place_id>', methods=['PUT'], strict_slashes=False)
@@ -74,4 +74,4 @@ def put_place(place_id):
         storage.save()
         return jsonify(place.to_dict()), 200
     else:
-        abort(404, description="Not a JSON")
+        abort(400, description="Not a JSON")
