@@ -8,17 +8,20 @@ from flask_cors import CORS
 
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": "0.0.0.0"}})
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.register_blueprint(app_views)
+
 
 @app.errorhandler(404)
 def error_404(error):
     return jsonify({"error": "Not found"}), 404
 
+
 @app.teardown_appcontext
 def teardown(error):
     storage.close()
+
 
 if __name__ == "__main__":
     app.run(host=os.getenv('HBNB_API_HOST', '0.0.0.0'),
