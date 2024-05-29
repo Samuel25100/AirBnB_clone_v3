@@ -95,10 +95,11 @@ class DBStorage:
         """count the number of objects in storage"""
         tmp = cls
         if cls:
-            if cls not in classes.values():
+            if cls not in classes and cls not in classes.values():
                 return None
             if type(cls) is str:
-                tmp = classes[cls]
+                tmp = cls
+                cls = classes[tmp]
             count = len(self.all(tmp))
         else:
             count = len(self.all())

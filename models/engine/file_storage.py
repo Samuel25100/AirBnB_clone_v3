@@ -85,8 +85,12 @@ class FileStorage:
         """count the number of objects in storage"""
         count = 0
         if cls:
-            if cls not in classes.values():
+            if cls not in classes and cls not in classes.values():
                 return None
+            if type(cls) is str:
+                tmp = cls
+                cls = classes[tmp]
+            print("$$",cls)
             count = len(self.all(cls))
         else:
             count = len(self.all())
