@@ -81,12 +81,15 @@ class DBStorage:
         if cls not in classes.values():
             return None
         if (cls and id):
-            if type(cls) is str:
-                tmp = classes[cls]
-            obj = self.all(tmp)
-            key = cls.__name__ + '.' + id
-            return obj.get(key)
-        return None
+                if isinstance(cls, str):
+                    tmp = classes[cls]
+                obj = self.all(tmp)
+                key = cls.__name__ + '.' + id
+                try:
+                    return obj.get(key)
+                except KeyError:
+                    return (None)
+        return (None)
 
     def count(self, cls=None):
         """count the number of objects in storage"""
