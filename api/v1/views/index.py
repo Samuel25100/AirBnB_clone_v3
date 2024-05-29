@@ -19,5 +19,8 @@ def stat():
     dic = {}
     for i in range(0, 6):
         val = storage.count(cls[i])
-        dic[key[i]] = val
+        if val is None:
+            dic[key[i]] = 0
+        else:
+            dic[key[i]] = val
     return jsonify(dic)
